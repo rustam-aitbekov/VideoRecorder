@@ -1,13 +1,13 @@
 Simple Video Recoding lib for .NET 6
 
 ## Important
-Need to download ffmpeg files(ffmpeg.exe, ffplay.exe, ffprobe.exe) and provide path into constructor while initializing:
+Need to download ffmpeg builds (ffmpeg.exe, ffplay.exe, ffprobe.exe) from [ffmpeg.org](https://ffmpeg.org/download.html) and provide path into constructor while initializing:
 
 ```csharp
 Video video = new(@"D:\FFmpeg");
 ```
 
-Sample wpf app:
+## Sample wpf app:
 
 ![image](https://github.com/rustam-aytbekoff/VideoRecorder/assets/45448359/efe72f33-49cd-44b9-88e4-3aed7b8fbbbc)
 
