@@ -11,3 +11,7 @@ Sample wpf app:
 - [OpenCvSharp4.WpfExtensions](https://www.nuget.org/packages/OpenCvSharp4.WpfExtensions)
 - [OpenCvSharp4.runtime.win](https://www.nuget.org/packages/OpenCvSharp4.runtime.win)
 - [Xabe.FFmpeg](https://www.nuget.org/packages/Xabe.FFmpeg)
+
+## License
+
+This library is distributed under the Apache License 2.0 License found in the [LICENSE](./LICENSE) file.
