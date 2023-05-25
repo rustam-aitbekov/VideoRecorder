@@ -26,14 +26,19 @@ namespace VideoRecorder.Wpf.Sample
 
             video = new(@"D:\FFmpeg");
 
-            List<Device> devices = video.GetAvailableDevices();
+            List<CameraDevice> devices = video.GetCameraDevices();
 
             CmbBoxCamera.ItemsSource = devices;
             CmbBoxCamera.SelectedIndex = 0;
+
+            List<InputAudioDevice> inputAudioDevices = video.GetInputAudioDevices();
+            CmbBoxMicrophone.ItemsSource = inputAudioDevices;
+            CmbBoxMicrophone.SelectedIndex = 0;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            video.Dispose();
             Environment.Exit(0);
         }
 
@@ -69,7 +74,7 @@ namespace VideoRecorder.Wpf.Sample
             string videoFileSavePath = Path.Combine(fileSavePath, $"video_{DateTime.Now.ToString("yyyyMMddHHmmss")}.mp4");
             Resolution resolution = (Resolution)CmbBoxCameraResolution.SelectedItem;
 
-            video.StartRecording(CmbBoxCamera.SelectedIndex, new Resolution() { Width = resolution.Width, Height = resolution .Height}, 60, videoFileSavePath);
+            video.StartRecording(CmbBoxCamera.SelectedIndex, new Resolution() { Width = resolution.Width, Height = resolution .Height}, 60, CmbBoxMicrophone.SelectedIndex, (bool)ChckBxRecordSpeaker.IsChecked, videoFileSavePath);
 
             frameBkgWorker.RunWorkerAsync();
 
@@ -85,9 +90,9 @@ namespace VideoRecorder.Wpf.Sample
 
         private void CmbBoxCamera_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Device selectedItem = (Device)CmbBoxCamera.SelectedItem;
+            CameraDevice selectedItem = (CameraDevice)CmbBoxCamera.SelectedItem;
 
-            CmbBoxCameraResolution.ItemsSource = video.GetAvailableResolutions(selectedItem.DeviceName);
+            CmbBoxCameraResolution.ItemsSource = video.GetAvailableResolutions(selectedItem.Name);
             CmbBoxCameraResolution.SelectedIndex = 0;
         }
     }

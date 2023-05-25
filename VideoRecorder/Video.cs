@@ -3,15 +3,19 @@ using VideoRecorder.Core;
 
 namespace VideoRecorder
 {
-    public class Video
+    public class Video : IDisposable
     {
+        private bool _disposed;
+
         private FrameRecorder frameRecorder;
-        private AudioRecorder soundRecorder;
-        private Camera camera;
+        private AudioRecorder audioRecorder;
+        private Camera camera = new();
 
         private string? frameFilePath;
         private string? audioFilePath;
         private string? compiledFilePath;
+        private int microphoneIndex;
+        private bool recordSpeaker;
 
         string tempFilePath = Path.GetTempPath();
 
@@ -21,8 +25,31 @@ namespace VideoRecorder
 
             frameFilePath = Path.Combine(tempFilePath, $"temp_frames_{DateTime.Now.ToString("yyyyMMddHHmmss")}.mp4");
             audioFilePath = Path.Combine(tempFilePath, $"temp_audio_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav");
+        }
 
-            camera = new Camera();
+        ~Video() 
+        { 
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) 
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    frameRecorder.Dispose();
+                    audioRecorder.Dispose();
+                }
+
+                _disposed = true;
+            }
         }
 
         private void DeleteFiles()
@@ -45,11 +72,13 @@ namespace VideoRecorder
             await Xabe.FFmpeg.FFmpeg.Conversions.New().Start(arguments);
         }
 
-        public void StartRecording(int deviceIndex, Resolution resolution, int fps, string filePath)
+        public void StartRecording(int cameraIndex, Resolution resolution, int fps, int microphoneIndex, bool recordSpeaker, string filePath)
         {
             compiledFilePath = filePath;
+            this.microphoneIndex = microphoneIndex;
+            this.recordSpeaker = recordSpeaker;
 
-            frameRecorder = new(deviceIndex, resolution.Width, resolution.Height, fps);
+            frameRecorder = new(cameraIndex, resolution.Width, resolution.Height, fps);
             frameRecorder.FrameRecordingStarted += FrameRecorder_FrameRecordingStarted;
 
             frameRecorder.StartRecording(frameFilePath);
@@ -57,14 +86,14 @@ namespace VideoRecorder
 
         private void FrameRecorder_FrameRecordingStarted()
         {
-            soundRecorder = new(audioFilePath);
-            soundRecorder.StartRecording();
+            audioRecorder = new(microphoneIndex, audioFilePath, recordSpeaker);
+            audioRecorder.StartRecording();
         }
 
         public async Task StopRecordingAsync()
         {
             frameRecorder.StopRecording();
-            soundRecorder.StopRecording();
+            audioRecorder.StopRecording();
 
             await AddAudioToVideoAsync();
 
@@ -76,13 +105,19 @@ namespace VideoRecorder
             return frameRecorder.GetFrame();
         }
 
-        public List<Device> GetAvailableDevices()
+        public List<CameraDevice> GetCameraDevices()
         {
-            return camera.GetAvailableDevices();
+            return camera.GetCameraDevices();
         }
+
         public List<Resolution> GetAvailableResolutions(string deviceName)
         {
             return camera.GetAvailableResolutions(deviceName);
         }
+
+        public List<InputAudioDevice> GetInputAudioDevices()
+        {
+            return AudioRecorder.GetInputAudioDevices();
+        }        
     }
 }

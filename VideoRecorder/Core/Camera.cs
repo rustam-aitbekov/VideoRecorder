@@ -62,15 +62,15 @@ namespace VideoRecorder.Core
             }
         }
 
-        public List<Device> GetAvailableDevices()
+        public List<CameraDevice> GetCameraDevices()
         {
-            List<Device> devices = new();
+            List<CameraDevice> devices = new();
 
             for (int i = 0; i < _dsDevices.Length; i++)
             {
                 if (!_dsDevices[i].Name.Contains("virtual", StringComparison.OrdinalIgnoreCase))
                 {
-                    devices.Add(new Device() { Id = i, DeviceName = _dsDevices[i].Name });
+                    devices.Add(new CameraDevice() { Id = i, Name = _dsDevices[i].Name });
                 }
             }
 
@@ -78,10 +78,10 @@ namespace VideoRecorder.Core
         }
     }
 
-    public class Device
+    public class CameraDevice
     {
         public int Id { get; set; }
-        public string DeviceName { get; set; }
+        public string Name { get; set; }
     }
 
     public class Resolution

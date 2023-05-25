@@ -3,19 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        ResizeMode="NoResize"
         Closed="Window_Closed"
+        ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="Video Record App Sample" Height="450" Width="654">
+        Title="Video Record App Sample" Height="544" Width="843">
     <Grid>
-        <Image Name="FrameImage" Margin="-94,0,-95,69"></Image>
+        <Image Name="FrameImage" Margin="12,16,13,122"></Image>
 
-        <Button Name="BtnFileSavePath" Content="Choose video file save path" Margin="234,352,127,0" VerticalAlignment="Top" Click="BtnFileSavePath_Click" Height="49"/>
+        <ComboBox Name="CmbBoxCamera" DisplayMemberPath="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" SelectionChanged="CmbBoxCamera_SelectionChanged" Margin="10,417,0,0"/>
+        <ComboBox Name="CmbBoxCameraResolution" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" Margin="10,444,0,0"/>
+        <ComboBox Name="CmbBoxMicrophone" DisplayMemberPath="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" Margin="10,471,0,0"/>
 
-        <ComboBox Name="CmbBoxCamera" DisplayMemberPath="DeviceName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="215" SelectionChanged="CmbBoxCamera_SelectionChanged" Margin="14,352,0,0"/>
-        <ComboBox Name="CmbBoxCameraResolution" HorizontalAlignment="Left" VerticalAlignment="Top" Width="215" Margin="14,379,0,0"/>
-
-        <Button Name="BtnStartRecord" IsEnabled="False" Content="Record" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49" Width="54" Click="BtnStartRecord_Click" Margin="516,352,0,0" />
-        <Button Name="BtnStopRecord" IsEnabled="False" Content="Stop" HorizontalAlignment="Right" VerticalAlignment="Top" Height="49" Width="49" Click="BtnStopRecord_Click" Margin="0,352,14,0"/>
+        <Button Name="BtnFileSavePath" Content="Choose video file save path" Margin="374,417,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnFileSavePath_Click" Height="34" Width="440"/>
+        <Button Name="BtnStartRecord" Content="Record" IsEnabled="False" HorizontalAlignment="Left" Margin="553,460,0,0" VerticalAlignment="Top" Height="34" Width="128" Click="BtnStartRecord_Click"/>
+        <Button Name="BtnStopRecord" IsEnabled="False" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Height="34" Width="128" Click="BtnStopRecord_Click" Margin="686,460,0,0"/>
+        <CheckBox Name="ChckBxRecordSpeaker" Content="Record sound from speaker" HorizontalAlignment="Left" Margin="374,469,0,0" VerticalAlignment="Top" IsChecked="True"/>
     </Grid>
 </Window>

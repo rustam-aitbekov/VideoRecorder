@@ -16,26 +16,34 @@ namespace VideoRecorder.Core
         private readonly string speakerWavFilePath;
         private readonly string microphoneWavFilePath;
         private readonly string audioFileSavePath;
+        private bool recordSpeaker;
 
         string tempFilePath = Path.GetTempPath();
 
-        public AudioRecorder(string audioFileSavePath)
+        public AudioRecorder(int deviceIndex, string audioFileSavePath, bool recordSpeaker = true)
         {
             this.audioFileSavePath = audioFileSavePath;
+            this.recordSpeaker = recordSpeaker;
 
-            //Speakers
-            speakerSource = new WasapiLoopbackCapture();
-            speakerSource.DataAvailable += SourceSpeakers_DataAvailable;
+            microphoneWavFilePath = this.audioFileSavePath;
+
+            if (this.recordSpeaker)
+            {
+                //Speaker
+                speakerSource = new WasapiLoopbackCapture();
+                speakerSource.DataAvailable += SourceSpeakers_DataAvailable;
+
+                speakerWavFilePath = Path.Combine(tempFilePath, $"audio_from_speaker_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav");
+                speakerWriter = new WaveFileWriter(speakerWavFilePath, speakerSource.WaveFormat);
+
+                microphoneWavFilePath = Path.Combine(tempFilePath, $"audio_from_microphone_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav");
+            }
 
             //Microphone
             microphoneSource = new WaveInEvent { WaveFormat = speakerSource.WaveFormat };
             microphoneSource.DataAvailable += SourceMicrophone_DataAvailable;
-            microphoneSource.DeviceNumber = 1;
-
-            speakerWavFilePath = Path.Combine(tempFilePath, $"audio_from_speaker_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav");
-            microphoneWavFilePath = Path.Combine(tempFilePath, $"audio_from_microphone_{DateTime.Now.ToString("yyyyMMddHHmmss")}.wav");
-
-            speakerWriter = new WaveFileWriter(speakerWavFilePath, speakerSource.WaveFormat);
+            microphoneSource.DeviceNumber = deviceIndex;
+            
             microphoneWriter = new WaveFileWriter(microphoneWavFilePath, microphoneSource.WaveFormat);
         }
 
@@ -60,9 +68,12 @@ namespace VideoRecorder.Core
                     microphoneWriter = null;
                     microphoneSource?.Dispose();
 
-                    speakerWriter?.Dispose();
-                    speakerWriter = null;
-                    speakerSource.Dispose();
+                    if (recordSpeaker)
+                    {
+                        speakerWriter?.Dispose();
+                        speakerWriter = null;
+                        speakerSource.Dispose();
+                    }
                 }
 
                 _disposed = true;
@@ -102,12 +113,26 @@ namespace VideoRecorder.Core
             microphoneWriter?.Write(e.Buffer, 0, e.BytesRecorded);
         }
 
+        public static List<InputAudioDevice> GetInputAudioDevices()
+        {
+            List<InputAudioDevice> devices = new();
+
+            for (int n = 0; n < WaveInEvent.DeviceCount; n++)
+            {
+                var caps = WaveInEvent.GetCapabilities(n);
+
+                devices.Add(new InputAudioDevice() { Id = n, Name = caps.ProductName});
+            }
+
+            return devices;
+        }
+
         public void StartRecording()
         {
             Parallel.Invoke
             (
                 () => { microphoneSource.StartRecording(); },
-                () => { speakerSource.StartRecording(); }
+                () => { if(recordSpeaker) speakerSource.StartRecording(); }
             );
         }
 
@@ -116,12 +141,22 @@ namespace VideoRecorder.Core
             Parallel.Invoke
             (
                 () => { microphoneSource.StopRecording(); },
-                () => { speakerSource.StopRecording(); }
+                () => { if (recordSpeaker) speakerSource.StopRecording(); }
             );
 
             Dispose(true);
 
-            CompileAudioFiles();
+            if (recordSpeaker)
+            {
+                CompileAudioFiles();
+            }
         }
+    }
+
+    public class InputAudioDevice
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
