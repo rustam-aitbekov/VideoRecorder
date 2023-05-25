@@ -1,4 +1,4 @@
-## Simple Video Recoding lib for .NET 6, C#
+## Simple video Recording lib for .NET 6, C#
 
 It's my first open source library. Feel free to ask questions, create pull requests or fork.
 
