@@ -1,16 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>VideoRecorder</PackageId>
+		<Version>2.0.0</Version>
+		<Authors>rustam-aitbekov</Authors>
+		<Description>Simple Windows library to record a camera together with the microphone and speaker audio into an MP4 file.</Description>
+		<PackageTags>video;recording;camera;webcam;audio;microphone;ffmpeg;opencv;naudio</PackageTags>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/rustam-aitbekov/VideoRecorder</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/rustam-aitbekov/VideoRecorder</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="DirectShowLib.Standard" Version="2.1.0" />
-		<PackageReference Include="NAudio" Version="2.1.0" />
-		<PackageReference Include="OpenCvSharp4.Extensions" Version="4.7.0.20230115" />
-		<PackageReference Include="OpenCvSharp4.runtime.win" Version="4.7.0.20230115" />
-		<PackageReference Include="Xabe.FFmpeg" Version="5.2.6" />
+		<PackageReference Include="NAudio" Version="3.3.0" />
+		<PackageReference Include="OpenCvSharp4.Extensions" Version="4.13.0.20261107" />
+		<PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20261107" />
 	</ItemGroup>
-	
+
+	<ItemGroup>
+		<!-- The library depends on Windows-only APIs (DirectShow, WinMM/WASAPI, OpenCvSharp win runtime). -->
+		<AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
+			<_Parameter1>windows</_Parameter1>
+		</AssemblyAttribute>
+		<InternalsVisibleTo Include="VideoRecorder.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
 </Project>

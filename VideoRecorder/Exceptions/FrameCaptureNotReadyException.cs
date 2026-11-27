@@ -13,7 +13,7 @@
         }
 
         /// <inheritdoc />
-        public FrameCaptureNotReadyException(string message, Exception innerException) : base(message, innerException)
+        public FrameCaptureNotReadyException(string message, Exception? innerException) : base(message, innerException)
         {
         }
     }
