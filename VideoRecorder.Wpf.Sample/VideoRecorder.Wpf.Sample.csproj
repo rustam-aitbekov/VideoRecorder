@@ -2,13 +2,13 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.7.0.20230115" />
+	  <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.13.0.20261107" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+  </Configurations>
+  <Project Path="VideoRecorder.Tests/VideoRecorder.Tests.csproj" />
+  <Project Path="VideoRecorder.Wpf.Sample/VideoRecorder.Wpf.Sample.csproj" />
+  <Project Path="VideoRecorder/VideoRecorder.csproj" />
+</Solution>

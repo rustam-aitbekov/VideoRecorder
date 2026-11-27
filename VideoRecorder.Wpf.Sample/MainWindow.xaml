@@ -3,20 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Loaded="Window_Loaded"
         Closed="Window_Closed"
         ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="Video Record App Sample" Height="544" Width="843">
+        Title="Video Record App Sample" Height="572" Width="843">
     <Grid>
         <Image Name="FrameImage" Margin="12,16,13,122"></Image>
 
         <ComboBox Name="CmbBoxCamera" DisplayMemberPath="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" SelectionChanged="CmbBoxCamera_SelectionChanged" Margin="10,417,0,0"/>
-        <ComboBox Name="CmbBoxCameraResolution" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" Margin="10,444,0,0"/>
-        <ComboBox Name="CmbBoxMicrophone" DisplayMemberPath="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" Margin="10,471,0,0"/>
+        <ComboBox Name="CmbBoxCameraResolution" SelectionChanged="Settings_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" Margin="10,444,0,0"/>
+        <ComboBox Name="CmbBoxMicrophone" DisplayMemberPath="Name" SelectionChanged="Settings_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" Width="356" Margin="10,471,0,0"/>
 
         <Button Name="BtnFileSavePath" Content="Choose video file save path" Margin="374,417,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnFileSavePath_Click" Height="34" Width="440"/>
         <Button Name="BtnStartRecord" Content="Record" IsEnabled="False" HorizontalAlignment="Left" Margin="553,460,0,0" VerticalAlignment="Top" Height="34" Width="128" Click="BtnStartRecord_Click"/>
         <Button Name="BtnStopRecord" IsEnabled="False" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Height="34" Width="128" Click="BtnStopRecord_Click" Margin="686,460,0,0"/>
         <CheckBox Name="ChckBxRecordSpeaker" Content="Record sound from speaker" HorizontalAlignment="Left" Margin="374,469,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <TextBlock Name="TxtStatus" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,503,0,0" Width="804" TextTrimming="CharacterEllipsis"/>
     </Grid>
 </Window>
