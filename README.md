@@ -4,6 +4,19 @@ It's my first open source library. Feel free to ask questions, create pull reque
 
 Records a camera together with the microphone (and, optionally, whatever the speakers are playing) into an MP4 file (H.264 video, AAC audio). Windows only.
 
+## Requirements
+
+- Windows
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- An IDE that opens `.slnx` solutions: Visual Studio 2022 17.13 or later, or a recent Rider
+
+Build and run the tests from the repository root:
+
+```powershell
+dotnet build
+dotnet test
+```
+
 ## Important
 The library calls [ffmpeg](https://ffmpeg.org/download.html) directly to produce the final MP4. Use a build that includes **libx264**, for example the "full" builds from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) or the "gpl" builds from [BtbN](https://github.com/BtbN/FFmpeg-Builds/releases).
 
@@ -29,6 +42,10 @@ Note that these ffmpeg builds are licensed under the GPL; they are downloaded by
 ## Usage
 
 ```csharp
+using OpenCvSharp;          // Mat
+using VideoRecorder;        // Video, FFmpegDownloader
+using VideoRecorder.Core;   // CameraDevice, Resolution, InputAudioDevice
+
 using Video video = new(@"D:\FFmpeg");
 
 CameraDevice camera = video.GetCameraDevices()[0];
@@ -47,11 +64,24 @@ await video.StopRecordingAsync();
 - The video always runs at the requested frame rate and matches real time; if the camera delivers fewer frames, the latest frame is repeated, so audio and video stay in sync.
 - Speaker audio stays in sync even when nothing is playing for a while.
 
+## Errors
+
+| Method | Exception | When |
+|---|---|---|
+| `StartRecording` | `FrameCaptureNotReadyException` | The camera could not be opened. |
+| `StartRecording` | `InvalidOperationException` | A recording is already in progress. |
+| `StopRecordingAsync` | `InvalidOperationException` | No recording was started, no frames came from the camera, writing the frames failed, or audio recording could not start (see `InnerException`). |
+| `StopRecordingAsync` | `FFmpegException` | ffmpeg could not be started or failed while creating the MP4 (`ExitCode` is set when it ran). |
+| `GetCurrentFrame` | `InvalidOperationException` | No recording is in progress. |
+| `FFmpegDownloader.EnsureAsync` | `FFmpegException` | The download failed or did not match its checksum. |
+
+If `StopRecordingAsync` throws, the temporary files are still cleaned up and the `Video` instance can start a new recording.
+
 When the sample WPF app opens, it uses the `FFMPEG_PATH` environment variable (folder or ffmpeg.exe) if set, then a previously downloaded copy, then ffmpeg on PATH, and otherwise downloads ffmpeg (progress is shown at the bottom of the window).
 
 ## Sample wpf app:
 
-![image](https://github.com/rustam-aytbekoff/VideoRecorder/assets/45448359/efe72f33-49cd-44b9-88e4-3aed7b8fbbbc)
+![image](https://github.com/rustam-aitbekov/VideoRecorder/assets/45448359/efe72f33-49cd-44b9-88e4-3aed7b8fbbbc)
 
 ## Important Nuget packages
 - [DirectShowLib.Standard](https://www.nuget.org/packages/DirectShowLib.Standard)
