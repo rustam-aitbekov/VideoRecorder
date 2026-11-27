@@ -17,13 +17,13 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore VideoRecorder.sln
+        run: dotnet restore VideoRecorder.slnx
 
       - name: Build
-        run: dotnet build VideoRecorder.sln --configuration Release --no-restore
+        run: dotnet build VideoRecorder.slnx --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test VideoRecorder.sln --configuration Release --no-build
+        run: dotnet test VideoRecorder.slnx --configuration Release --no-build
 
       - name: Pack
         run: dotnet pack VideoRecorder/VideoRecorder.csproj --configuration Release --no-build --output artifacts
